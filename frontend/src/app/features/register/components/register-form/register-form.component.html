@@ -1,0 +1,59 @@
+<div>
+  <div class="text-center">
+    <h2>Register Form</h2>
+  </div>
+  <div>
+    <form #registerForm="ngForm" (submit)="submitted()">
+      <div class="mb-3">
+        <label for="first-name" class="form-label">First Name</label>
+        <input 
+          type="text"
+          class="form-control"
+          name="first-name"
+          id="first-name"
+          autocomplete="no"
+          [(ngModel)]="registerCredentials.firstName"
+        >
+      </div>
+      <div class="mb-3">
+        <label for="last-name" class="form-label">Last Name</label>
+        <input 
+          type="text"
+          class="form-control"
+          name="last-name"
+          id="last-name"
+          autocomplete="no"
+          [(ngModel)]="registerCredentials.lastName"
+        >
+      </div>
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input 
+          type="text"
+          class="form-control"
+          name="username"
+          id="username"
+          autocomplete="no"
+          [(ngModel)]="registerCredentials.username"
+        >
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input 
+          type="password"
+          class="form-control"
+          name="password"
+          id="password"
+          autocomplete="no"
+          [(ngModel)]="registerCredentials.password"
+        >
+      </div>
+      <div>
+        <button
+          type="submit"
+          class="btn btn-outline-dark"
+        >Register</button>
+      </div>
+    </form>
+  </div>
+</div>

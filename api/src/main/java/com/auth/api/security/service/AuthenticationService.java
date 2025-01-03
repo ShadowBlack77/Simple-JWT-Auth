@@ -1,6 +1,7 @@
 package com.auth.api.security.service;
 
 import com.auth.api.security.model.AuthenticationResponse;
+import com.auth.api.security.model.Response;
 import com.auth.api.security.model.Token;
 import com.auth.api.security.model.User;
 import com.auth.api.security.repository.TokenRepository;
@@ -29,8 +30,9 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final TokenRepository tokenRepository;
 
-    public String register(User request) {
+    public Response register(User request) {
         User user = new User();
+        Response response = new Response();
 
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
@@ -40,7 +42,9 @@ public class AuthenticationService {
 
         userRepository.save(user);
 
-        return "User registered successfully";
+        response.setMessage("User Created Successfully");
+
+        return response;
     }
 
     public AuthenticationResponse login(User request, HttpServletResponse response) {
@@ -71,14 +75,20 @@ public class AuthenticationService {
         return new AuthenticationResponse(accessToken);
     }
 
-    public ResponseEntity refreshToken(HttpServletRequest request, HttpServletResponse response) {
-        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+    public ResponseEntity refreshToken(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
 
-        if(authHeader == null || !authHeader.startsWith("Bearer ")) {
+        if (cookies == null || cookies.length == 0) {
             return new ResponseEntity<>("Access Denied", HttpStatus.UNAUTHORIZED);
         }
 
-        String token = authHeader.substring(7);
+        String token = "";
+
+        for (Cookie cookie : cookies) {
+            if ("refresh-token".equals(cookie.getName())) {
+                token = cookie.getValue();
+            }
+        }
 
         String username = jwtService.extractUsername(token);
 
@@ -87,11 +97,10 @@ public class AuthenticationService {
 
         if(jwtService.isValidRefreshToken(token, user)) {
             String accessToken = jwtService.generateAccessToken(user);
-            String refreshToken = jwtService.generateRefreshToken(user);
 
             revokeAllTokenByUser(user);
 
-            saveUserToken(accessToken, refreshToken, user);
+            saveUserToken(accessToken, token, user);
 
             return new ResponseEntity<>(new AuthenticationResponse(accessToken), HttpStatus.OK);
         }

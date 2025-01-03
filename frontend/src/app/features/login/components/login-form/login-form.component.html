@@ -1,0 +1,37 @@
+<div>
+  <div class="text-center">
+    <h2>Login Form</h2>
+  </div>
+  <div>
+    <form #loginForm="ngForm" (submit)="submitted()">
+      <div class="mb-3">
+        <label for="username">Username</label>
+        <input 
+          type="text"
+          class="form-control"
+          name="username"
+          id="username"
+          autocomplete="no"
+          [(ngModel)]="loginCredentials.username"
+        >
+      </div>
+      <div class="mb-3">
+        <label for="password">Password</label>
+        <input 
+          type="password"
+          class="form-control"
+          name="password"
+          id="password"
+          autocomplete="no"
+          [(ngModel)]="loginCredentials.password"
+        >
+      </div>
+      <div>
+        <button 
+          type="submit"
+          class="btn btn-outline-dark"
+        >Login</button>
+      </div>
+    </form>
+  </div>
+</div>
